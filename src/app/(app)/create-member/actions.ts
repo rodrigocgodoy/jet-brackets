@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache"
 import { createClient as createClientAdmin } from "@/lib/supabase/admin"
 import { readUser } from "@/lib/supabase/actions"
 import { createClient } from "@/lib/supabase/server"
+import { getURL } from "@/lib/utils"
 
 export async function getMember(id: string) {
   const supabase = createClient()
@@ -85,20 +86,19 @@ export async function createMember(data: {
 
   const displayName = `${data.firstName} ${data.lastName}`
 
-  const resultCreateUser = await supabaseAdmin.auth.admin.createUser({
-    email: data.email,
-    password: `${data.firstName}@001`,
-    user_metadata: {
+  const resultInveteEmail = await supabaseAdmin.auth.admin.inviteUserByEmail(data.email, {
+    redirectTo: getURL(),
+    data: {
       display_name: displayName,
       role: "user",
     }
   })
 
-  if (resultCreateUser.error?.message) {
+  if (resultInveteEmail.error?.message) {
     return JSON.stringify({
       user: null,
       error: {
-        message: resultCreateUser.error?.message,
+        message: resultInveteEmail.error?.message,
       }
     })
   }
@@ -106,7 +106,7 @@ export async function createMember(data: {
   const resultCreateMember = await supabaseAdmin.from("member").insert({
     display_name: displayName,
     email: data.email,
-    id: resultCreateUser.data.user?.id,
+    id: resultInveteEmail.data.user?.id,
   })
   
   if (resultCreateMember.error?.message) {
@@ -120,7 +120,7 @@ export async function createMember(data: {
 
   const resultCreatePermission = await supabaseAdmin.from("permission").insert({
     role: "user",
-    member_id: resultCreateUser.data.user?.id,
+    member_id: resultInveteEmail.data.user?.id,
   })
 
   if (resultCreatePermission.error?.message) {
