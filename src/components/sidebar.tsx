@@ -14,11 +14,8 @@ import { Nav } from "./nav"
 
 export async function Sidebar() {
   const { data: { user } } = await readUser()
-  console.log("🚀 ~ Sidebar ~ user:", user)
-  const { display_name: displayName } = user?.user_metadata!
-  console.log("🚀 ~ Sidebar ~ user?.user_metadata:", user?.user_metadata)
-
-  const abbreviation = `${displayName?.split(" ")[0][0] || ''}${displayName?.split(" ")[1][0] || ''}`
+  const displayName = user?.user_metadata?.display_name || ""
+  const abbreviation = `${displayName?.split(" ")[0][0] || ""}${displayName?.split(" ")[1][0] || ""}`
 
   const logout = async () => {
 		"use server"
