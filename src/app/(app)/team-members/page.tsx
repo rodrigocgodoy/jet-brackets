@@ -8,7 +8,7 @@ import Image from "next/image"
 
 export default async function Members() {
   const { data: { user } } = await readUser()
-  const { role } = user?.user_metadata!
+  const role = user?.user_metadata?.role || 'user'
 
   const isAdmin = (role || "") === "admin"
 
