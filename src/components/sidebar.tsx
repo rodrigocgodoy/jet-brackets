@@ -14,6 +14,7 @@ import { Nav } from "./nav"
 
 export async function Sidebar() {
   const { data: { user } } = await readUser()
+  console.log("🚀 ~ Sidebar ~ user:", user)
   const { display_name: displayName } = user?.user_metadata!
   console.log("🚀 ~ Sidebar ~ user?.user_metadata:", user?.user_metadata)
 

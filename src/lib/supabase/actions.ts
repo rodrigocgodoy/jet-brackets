@@ -22,7 +22,7 @@ export async function nonPrivatePageValidation() {
   const { data } = await readUserSession();
 
   if (data.session) {
-    return redirect("/")
+    return redirect("/team-members")
   }
 }
 
